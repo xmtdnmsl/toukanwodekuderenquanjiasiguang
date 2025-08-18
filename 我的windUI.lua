@@ -8830,52 +8830,39 @@ local aw=ar(ap)
 
 local backgroundImage = Instance.new("ImageLabel")
 backgroundImage.Name = "WindowBackground"
-backgroundImage.Parent = aw.Instance  
-backgroundImage.Size = UDim2.fromScale(1, 1)  
+backgroundImage.Parent = aw.Instance  -- 确保aw.Instance是有效且正确的父容器
+backgroundImage.Size = UDim2.fromScale(1, 1)  -- 让背景图铺满父容器
 backgroundImage.Position = UDim2.fromScale(0, 0)
-backgroundImage.BackgroundTransparency = 1  
-backgroundImage.ZIndex = 0  
-backgroundImage.ScaleType = Enum.ScaleType.Cover  
+backgroundImage.BackgroundTransparency = 1  -- 自身背景透明，只显示图片
+backgroundImage.ZIndex = -1  -- 设置为较低层级，避免遮挡其他UI元素
+backgroundImage.ScaleType = Enum.ScaleType.Stretch  -- 初始缩放模式设为Stretch
 
-aw.BackgroundImage = backgroundImage
+aw.BackgroundImage = backgroundImage  -- 将背景图对象存入窗口实例，供方法调用
 
+-- 设置背景图方法：接收图片资源ID，设置到背景图的Image属性
 function aw:SetBackgroundImage(imageId)
-    if self.BackgroundImage then
-        self.BackgroundImage.Image = imageId  
-    end
-end
-
-function aw:SetBackgroundTransparency(alpha)
-    if self.BackgroundImage then
-        self.BackgroundImage.ImageTransparency = math.clamp(alpha, 0, 1)  
-    end
-end
-
-function aw:SetBackgroundImage(imageId)
-    
     if self.BackgroundImage and self.BackgroundImage:IsA("ImageLabel") then
-        
         self.BackgroundImage.Image = imageId
     else
-        warn("背景图容器不存在，无法设置图片")
+        warn("背景图容器不存在或类型错误，无法设置图片")
     end
 end
 
+-- 设置背景图透明度方法：将透明度限制在0到1之间
 function aw:SetBackgroundTransparency(alpha)
     if self.BackgroundImage and self.BackgroundImage:IsA("ImageLabel") then
-        
         self.BackgroundImage.ImageTransparency = math.clamp(alpha, 0, 1)
     end
 end
 
+-- 设置背景图缩放模式方法：验证缩放模式有效性后进行设置
 function aw:SetBackgroundScaleType(scaleType)
     if self.BackgroundImage and self.BackgroundImage:IsA("ImageLabel") then
-        
         local validType = Enum.ScaleType[scaleType]
         if validType then
             self.BackgroundImage.ScaleType = validType
         else
-            warn("无效的缩放模式：" .. tostring(scaleType))
+            warn("无效的缩放模式：" .. tostring(scaleType) .. "，请使用Enum.ScaleType中的有效枚举值，如'Crop'、'Fit'、'Stretch'等")
         end
     end
 end
