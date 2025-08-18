@@ -8831,10 +8831,15 @@ local aw=ar(ap)
 local backgroundImage = Instance.new("ImageLabel")
 backgroundImage.Name = "WindowBackground"
 backgroundImage.Parent = aw.Instance  -- 确保aw.Instance是有效且正确的父容器
+-- 加在 backgroundImage.Parent = aw.Instance 之后
+if aw.Instance then
+    aw.Instance.Visible = true -- 确保父容器可见
+    aw.Instance.BackgroundTransparency = 1 -- 避免父容器背景遮挡
+end
 backgroundImage.Size = UDim2.fromScale(1, 1)  -- 让背景图铺满父容器
 backgroundImage.Position = UDim2.fromScale(0, 0)
 backgroundImage.BackgroundTransparency = 1  -- 自身背景透明，只显示图片
-backgroundImage.ZIndex = -1  -- 设置为较低层级，避免遮挡其他UI元素
+backgroundImage.ZIndex = 0  -- 设置为较低层级，避免遮挡其他UI元素
 backgroundImage.ScaleType = Enum.ScaleType.Stretch  -- 初始缩放模式设为Stretch
 
 aw.BackgroundImage = backgroundImage  -- 将背景图对象存入窗口实例，供方法调用
